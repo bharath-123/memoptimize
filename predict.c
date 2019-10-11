@@ -153,10 +153,11 @@ predict(struct frag_info *frag_vec, struct lsq_struct *lsq,
 	}
 
 	if (!is_ready)
-		return retval;
+		goto retval;
 
 	if (frag_vec[0].free_pages < high_wmark) {
 		retval |= MEMPREDICT_RECLAIM;
+		goto retval;
 	}
 
 	/*
@@ -196,7 +197,7 @@ predict(struct frag_info *frag_vec, struct lsq_struct *lsq,
 			if ((x_cross < mempredict_threshold) &&
 				(x_cross > -mempredict_threshold)) {
 				retval |= MEMPREDICT_COMPACT;
-				return retval;
+				goto retval;
 			}
 		}
 	}
@@ -232,5 +233,6 @@ predict(struct frag_info *frag_vec, struct lsq_struct *lsq,
 		}
 	}
 
+out:
 	return retval;
 }
